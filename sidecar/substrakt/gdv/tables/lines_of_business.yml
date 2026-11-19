@@ -1,0 +1,23 @@
+# Line of business code (Sparte, key field 4 of every record) by the
+# canonical term the document kinds deliver for `line_of_business`.
+#
+# The codes are those of annex 1 “Spartenverzeichnis” of the GDV data set
+# VU-Vermittler, release 01.12.2023:
+# https://www.gdv-online.de/vuvm/bestand/rel2023/anl1.htm
+#
+# Annex 1 has one code for liability insurance; private and business
+# liability both map to it. A term without a line here is not handed over.
+
+name: lines_of_business
+source: >-
+  GDV data set VU-Vermittler, release 01.12.2023, annex 1
+  “Spartenverzeichnis”, read on 10 November 2026.
+entries:
+  Unfall: "030"
+  Privathaftpflicht: "040"
+  Betriebshaftpflicht: "040"
+  Kraftfahrt: "050"
+  Rechtsschutz: "070"
+  Glas: "110"
+  Hausrat: "130"
+  Wohngebäude: "140"

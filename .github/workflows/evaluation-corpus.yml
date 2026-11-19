@@ -1,0 +1,40 @@
+name: Evaluation corpus
+
+on:
+  pull_request:
+    paths:
+      - 'corpus/evaluation/**'
+      - '.gitattributes'
+      - '.github/workflows/evaluation-corpus.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'corpus/evaluation/**'
+      - '.gitattributes'
+      - '.github/workflows/evaluation-corpus.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: LFS objects
+        run: git lfs fsck
+      - name: Scoring and dataset integrity (offline)
+        run: python -m unittest discover -s corpus/evaluation/v1 -p 'test_*.py' -v
+      # --verify re-scores the stored predictions with plain Python; it needs
+      # neither the sidecar environment nor Tesseract.
+      - name: Stored reports re-scored independently
+        run: |
+          for report in corpus/evaluation/reports/*/; do
+            python corpus/evaluation/tools/run_benchmark.py --verify "$report"
+          done

@@ -1,0 +1,24 @@
+# Insurer number (VU-Nummer, key field 2 of every record) by the name of the
+# insurer as it is approved in review. Case and spacing do not count; any
+# other difference in spelling is a different name and needs its own line.
+#
+# The four entries below are the invented insurers of the synthetic corpus
+# with invented numbers; they exist so that the tests have something to map.
+#
+# For real insurers the number is the one of the BaFin register of insurance
+# undertakings, which the GDV publishes as a list at
+# https://www.gdv-online.de/vuvm/vunummern.htm. The broker's own data decides
+# which spelling of a name maps to which number. Put the real table into
+# <data dir>/gdv/insurers.yml; it replaces this file completely. Write every
+# number in quotes, so that a leading zero survives.
+
+name: insurers
+source: >-
+  Invented numbers for the invented insurers of corpus/insurance.py. Real
+  numbers: BaFin register, published by the GDV at
+  https://www.gdv-online.de/vuvm/vunummern.htm.
+entries:
+  Nordlicht Versicherung AG: "9901"
+  Hansekontor Sachversicherung AG: "9902"
+  Alpenrand Versicherung a. G.: "9903"
+  Wattenmeer Assekuranz SE: "9904"

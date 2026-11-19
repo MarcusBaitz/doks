@@ -1,0 +1,2 @@
+{"occurred_at":"1794300000","action":"export","target":"https://example.com/x","bytes":0,"result":"denied","mode":"airgap"}
+{"occurred_at":"1794300060","action":"export","target":"https://files.customer.internal/x","bytes":0,"result":"allowed","mode":"onprem"}

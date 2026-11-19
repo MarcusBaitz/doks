@@ -1,0 +1,173 @@
+# yaml-language-server: $schema=document_kind.schema.json
+#
+# Premium invoices (Beitragsrechnungen) of an insurer for one contract and one
+# period. The amounts are kept apart as net premium, insurance tax and gross
+# premium, because a debit position is handed over with all three.
+
+name: premium_invoice
+title: Beitragsrechnung
+description: Beitragsrechnungen eines Versicherers zu einem Vertrag.
+
+recognition:
+  title_patterns:
+    - 'Beitragsrechnung'
+    - 'Beitragsmitteilung'
+    - 'Beitragsanforderung'
+    - 'Prämienrechnung'
+    - 'Rechnung\s+über\s+(?:den\s+)?(?:Versicherungs)?beitrag'
+
+# Legal forms identify the insurer's line in the letterhead.
+legal_forms:
+  - 'AG'
+  - 'SE'
+  - 'VVaG'
+  - 'a\.\s?G'
+  - 'eG'
+  - 'Versicherungsverein'
+
+# Labels without a value of their own end another value's search area.
+boundaries:
+  - 'Kundennummer'
+  - 'Kunden[-\s]*Nr\.?'
+  - 'Vermittler(?:nummer)?'
+  - 'Agentur'
+  - 'Telefon'
+  - 'Tel\.?'
+  - 'E-Mail'
+  - 'IBAN'
+  - 'BIC'
+  - 'Sachbearbeiter(?:in)?'
+  - 'Geburtsdatum'
+  - 'Risikoort'
+  - 'Versicherungssumme'
+  - 'Selbstbeteiligung'
+
+fields:
+  - name: insurer
+    label: Versicherer
+    question: Welche Gesellschaft versichert?
+    json_type: string
+    label_rule:
+      patterns: ['Versicherer', 'Risikoträger', 'Gesellschaft']
+      value: company
+      # Without a label the insurer stands in the letterhead above the address.
+      letterhead_until: ['Herrn?\b', 'Frau\b', 'Firma\b', 'Familie\b', 'Eheleute\b']
+
+  - name: policy_number
+    label: Versicherungsscheinnummer
+    question: Wie lautet die Versicherungsscheinnummer?
+    json_type: string
+    label_rule:
+      patterns:
+        - 'Versicherungsschein[-\s]*(?:Nr\.?|Nummer)'
+        - 'Versicherungsscheinnummer'
+        - 'Versicherungs(?:nummer|[-\s]*Nr\.?)'
+        - 'Vertrags(?:nummer|[-\s]*Nr\.?)'
+        - 'Policen?(?:nummer|[-\s]*Nr\.?)'
+        - 'VS[-\s]*Nr\.?'
+      value: identifier
+
+  - name: policyholder
+    label: Versicherungsnehmer
+    question: Wer ist Versicherungsnehmer?
+    json_type: string
+    label_rule:
+      patterns: ['Versicherungsnehmer(?:in)?']
+      value: text
+
+  - name: line_of_business
+    label: Sparte
+    question: Welche Sparte ist versichert?
+    json_type: string
+    label_rule:
+      patterns: ['Sparte', 'Versicherungsart', 'Vertragsart', 'Versicherungszweig']
+      value: term
+      # The line of business often stands only in the heading.
+      unlabelled: true
+      terms:
+        Hausrat: [Hausratversicherung, Hausrat-Versicherung]
+        Wohngebäude: [Wohngebäudeversicherung, Wohngebäude-Versicherung, Gebäudeversicherung]
+        Privathaftpflicht: [Privathaftpflichtversicherung, Privat-Haftpflichtversicherung, Private Haftpflichtversicherung]
+        Betriebshaftpflicht: [Betriebshaftpflichtversicherung, Betriebs-Haftpflichtversicherung]
+        Kraftfahrt: [Kraftfahrtversicherung, Kraftfahrzeugversicherung, Kfz-Versicherung, Kfz-Haftpflichtversicherung]
+        Rechtsschutz: [Rechtsschutzversicherung, Rechtsschutz-Versicherung]
+        Unfall: [Unfallversicherung, Unfall-Versicherung]
+        Glas: [Glasversicherung, Glas-Versicherung]
+
+  - name: invoice_date
+    label: Rechnungsdatum
+    question: Wann wurde die Rechnung ausgestellt?
+    json_type: date
+    label_rule:
+      patterns: ['Rechnungsdatum', 'Belegdatum', 'Datum']
+      value: date
+
+  - name: period_start
+    label: Zeitraum von
+    question: Ab wann gilt der berechnete Zeitraum?
+    json_type: date
+    label_rule:
+      patterns: ['Versicherungszeitraum(?:\s+vom)?', 'Beitragszeitraum(?:\s+vom)?', 'Abrechnungszeitraum(?:\s+vom)?', 'Zeitraum(?:\s+vom)?']
+      value: date
+
+  - name: period_end
+    label: Zeitraum bis
+    question: Bis wann gilt der berechnete Zeitraum?
+    json_type: date
+    label_rule:
+      patterns: ['Versicherungszeitraum(?:\s+vom)?', 'Beitragszeitraum(?:\s+vom)?', 'Abrechnungszeitraum(?:\s+vom)?', 'Zeitraum(?:\s+vom)?']
+      value: date
+      position: 2
+
+  - name: due_date
+    label: Fällig am
+    question: Wann ist der Beitrag fällig?
+    json_type: date
+    label_rule:
+      patterns: ['Fällig\s+(?:am|zum)', 'Fälligkeit', 'Fälligkeitsdatum', 'Zahlbar\s+bis']
+      value: date
+
+  - name: payment_mode
+    label: Zahlweise
+    question: Wie oft wird der Beitrag gezahlt?
+    json_type: string
+    label_rule:
+      patterns: ['Zahlweise', 'Zahlungsweise', 'Zahlungsperiode', 'Zahlungsart']
+      value: term
+      terms:
+        jährlich: [jährliche, ganzjährlich, 1/1]
+        halbjährlich: [halbjährliche, 1/2]
+        vierteljährlich: [vierteljährliche, quartalsweise, 1/4]
+        monatlich: [monatliche, 1/12]
+        einmalig: [Einmalbeitrag]
+
+  - name: net_premium
+    label: Nettobeitrag
+    question: Wie hoch ist der Beitrag ohne Versicherungsteuer?
+    json_type: number
+    label_rule:
+      patterns: ['Nettobeitrag', 'Beitrag\s+(?:ohne|exkl\.?)\s+Versicherung(?:s)?steuer', 'Beitrag\s+netto']
+      value: amount
+
+  - name: insurance_tax
+    label: Versicherungsteuer
+    question: Wie hoch ist die Versicherungsteuer?
+    json_type: number
+    label_rule:
+      patterns: ['(?<!inkl\. )(?<!incl\. )(?<!einschl\. )(?<!inklusive )(?<!einschließlich )(?<!ohne )(?<!exkl\. )Versicherung(?:s)?steuer']
+      value: amount
+      # “Beitrag inkl. Versicherungsteuer” is the gross premium; the
+      # look-behinds in the pattern keep it from being read as the tax.
+      skip_tax_rate: true
+
+  - name: premium
+    label: Gesamtbeitrag
+    question: Wie hoch ist der Beitrag einschließlich Versicherungsteuer?
+    json_type: number
+    label_rule:
+      patterns: ['Gesamtbeitrag', 'Rechnungsbetrag', 'Zahlbetrag', 'Zu\s+zahlender\s+(?:Betrag|Beitrag)', 'Bruttobeitrag', 'Beitrag\s+(?:inkl|einschl|incl)\.?\s+Versicherung(?:s)?steuer', 'Gesamtbetrag', 'Endbetrag']
+      value: amount
+
+# Two files with different content that agree in all of these values are a
+# possible duplicate: the same paper scanned twice. A person decides.
+same_document: [policy_number, invoice_date]

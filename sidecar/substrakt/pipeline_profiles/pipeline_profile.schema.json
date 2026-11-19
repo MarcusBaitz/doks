@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Generated from substrakt.pipeline_profiles.PipelineProfile with write_schema(); do not edit by hand.",
+  "$defs": {
+    "ExpectedValues": {
+      "additionalProperties": false,
+      "description": "The values one document kind must deliver for the target.",
+      "properties": {
+        "values": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Value name in the document kind mapped to its name in the target",
+          "minProperties": 1,
+          "title": "Values",
+          "type": "object"
+        },
+        "optional": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Values in the same form that are handed over when they were read unambiguously and do not block an approval when they were not",
+          "title": "Optional",
+          "type": "object"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "ExpectedValues",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A complete pipeline profile from YAML.",
+  "properties": {
+    "name": {
+      "description": "Must equal the file name without its extension",
+      "title": "Name",
+      "type": "string"
+    },
+    "title": {
+      "description": "Display name for the interface",
+      "title": "Title",
+      "type": "string"
+    },
+    "target": {
+      "description": "Target the approved values are handed over to",
+      "title": "Target",
+      "type": "string"
+    },
+    "customer_folder_level": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Folder level below the watched folder that names the customer; 1 is the first subfolder, null means folders name no customer",
+      "title": "Customer Folder Level"
+    },
+    "kinds": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ExpectedValues"
+      },
+      "description": "Document kinds this profile reads, by file name without extension",
+      "minProperties": 1,
+      "title": "Kinds",
+      "type": "object"
+    },
+    "overview_columns": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Values shown as columns of the overview, in order, as value name mapped to the column heading",
+      "title": "Overview Columns",
+      "type": "object"
+    },
+    "hand_over": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Settings of the hand-over format; checked by the writer of the target",
+      "title": "Hand Over"
+    }
+  },
+  "required": [
+    "name",
+    "title",
+    "target",
+    "customer_folder_level",
+    "kinds"
+  ],
+  "title": "PipelineProfile",
+  "type": "object"
+}

@@ -1,0 +1,47 @@
+{
+  "policy": {
+    "values": [
+      "end_date",
+      "insurer",
+      "line_of_business",
+      "payment_mode",
+      "policy_number",
+      "policyholder",
+      "start_date"
+    ],
+    "optional": [
+      "annual_premium",
+      "issue_date",
+      "net_premium",
+      "premium"
+    ]
+  },
+  "contract_change": {
+    "values": [
+      "change_date",
+      "insurer",
+      "line_of_business",
+      "policy_number",
+      "policyholder",
+      "premium"
+    ],
+    "optional": []
+  },
+  "premium_invoice": {
+    "values": [
+      "due_date",
+      "insurer",
+      "line_of_business",
+      "policy_number",
+      "policyholder",
+      "premium"
+    ],
+    "optional": [
+      "insurance_tax",
+      "invoice_date",
+      "net_premium",
+      "period_end",
+      "period_start"
+    ]
+  }
+}

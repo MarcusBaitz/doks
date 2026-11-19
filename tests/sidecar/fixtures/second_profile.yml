@@ -1,0 +1,28 @@
+# A profile for an invented broker and an invented target, used by
+# tests/sidecar/test_second_profile.py. It differs from the shipped profile
+# in everything a profile decides: the folder level of the customer, the
+# kinds, the expected values, their names in the target, and the target.
+# It is a test fixture and is not shipped.
+
+name: file_archive
+title: Aktenablage Beispiel
+target: invented_archive
+
+# <watched folder>/<year>/<customer>/<document>: the second subfolder is the customer.
+customer_folder_level: 2
+
+overview_columns:
+  policyholder: Kunde
+  total_amount: Summe
+
+kinds:
+  policy:
+    values:
+      policy_number: Vertrag
+      policyholder: Kunde
+    optional:
+      issue_date: Ausgestellt
+  invoice:
+    values:
+      document_number: Belegnr
+      total_amount: Summe

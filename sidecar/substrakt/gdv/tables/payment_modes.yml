@@ -1,0 +1,20 @@
+# Payment mode code (Zahlungsweise, record 0200 field 12 and record 0400
+# field 13) by the canonical term the document kinds deliver for
+# `payment_mode`.
+#
+# The codes are those of annex 14 “Zahlungsweise” of the GDV data set
+# VU-Vermittler, release 01.12.2023:
+# https://www.gdv-online.de/vuvm/bestand/rel2023/anl14.htm
+# Annex 14 also knows 5 “Sonstiges” and 9 “beitragsfrei”; no term of the
+# document kinds means either.
+
+name: payment_modes
+source: >-
+  GDV data set VU-Vermittler, release 01.12.2023, annex 14 “Zahlungsweise”,
+  read on 10 November 2026.
+entries:
+  jährlich: "1"
+  halbjährlich: "2"
+  vierteljährlich: "4"
+  einmalig: "6"
+  monatlich: "8"

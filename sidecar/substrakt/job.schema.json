@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Generated from substrakt.jobs.JobFile with write_schema(); do not edit by hand.",
+  "$defs": {
+    "JobValue": {
+      "additionalProperties": false,
+      "description": "One approved value: as it stands on the paper, and as it was read.",
+      "properties": {
+        "text": {
+          "description": "The value as written in the document or entered by a person",
+          "title": "Text",
+          "type": "string"
+        },
+        "normalized": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "ISO date, number or cleaned text; null when the value has no such form",
+          "title": "Normalized"
+        }
+      },
+      "required": [
+        "text",
+        "normalized"
+      ],
+      "title": "JobValue",
+      "type": "object"
+    },
+    "PageRange": {
+      "additionalProperties": false,
+      "properties": {
+        "first": {
+          "description": "First page of the document in the file, counted from 1",
+          "minimum": 1,
+          "title": "First",
+          "type": "integer"
+        },
+        "last": {
+          "description": "Last page of the document in the file",
+          "minimum": 1,
+          "title": "Last",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "first",
+        "last"
+      ],
+      "title": "PageRange",
+      "type": "object"
+    },
+    "SourceFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "description": "Where the scanned file lies; the file itself is not copied",
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "description": "SHA-256 of the file as it was read",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "SourceFile",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One approved document, as it is written into the hand-over folder.",
+  "properties": {
+    "version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this format",
+      "title": "Version",
+      "type": "integer"
+    },
+    "id": {
+      "description": "Unique id of the job; the file is named <id>.json",
+      "title": "Id",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "description": "SHA-256 over file hash, kind and values; equal for the same approved content",
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "approved_at": {
+      "description": "Time of the approval, ISO 8601 with offset",
+      "title": "Approved At",
+      "type": "string"
+    },
+    "profile": {
+      "description": "Name of the pipeline profile the document was read with",
+      "title": "Profile",
+      "type": "string"
+    },
+    "target": {
+      "description": "Target of that profile; it chooses the hand-over format",
+      "title": "Target",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Document kind",
+      "title": "Kind",
+      "type": "string"
+    },
+    "customer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Customer folder the file lay in, or null",
+      "title": "Customer"
+    },
+    "file": {
+      "$ref": "#/$defs/SourceFile"
+    },
+    "pages": {
+      "$ref": "#/$defs/PageRange"
+    },
+    "values": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JobValue"
+      },
+      "description": "Approved values by their name in the target",
+      "title": "Values",
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "idempotency_key",
+    "approved_at",
+    "profile",
+    "target",
+    "kind",
+    "customer",
+    "file",
+    "pages",
+    "values"
+  ],
+  "title": "JobFile",
+  "type": "object"
+}

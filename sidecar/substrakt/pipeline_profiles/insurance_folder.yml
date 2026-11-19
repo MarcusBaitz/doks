@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=./pipeline_profile.schema.json
+#
+# Example pipeline shipped with the core: scanned insurance documents in one
+# folder per customer, handed over to a target that has no writer, so every
+# approved job ends as failed with that reason. A real customer setup is a
+# profile of its own in <data dir>/pipeline_profiles/ (docs/configuration.md);
+# the core names no target application.
+#
+# The document kinds and their value names are the three insurance kinds of
+# the core (policy.yml, contract_change.yml, premium_invoice.yml). The names
+# on the right are the terms under which a clerk would enter the value in the
+# target; a writer of a hand-over format reads the values under them.
+
+name: insurance_folder
+title: Beispielziel
+target: example_target
+
+# <watched folder>/<customer>/<document>: the first subfolder is the customer.
+customer_folder_level: 1
+
+# The three values the clerk looks for in the list of an import.
+overview_columns:
+  insurer: Versicherer
+  policy_number: Nummer
+  premium: Beitrag
+
+kinds:
+  policy:
+    values:
+      insurer: Versicherer
+      policy_number: Versicherungsscheinnummer
+      policyholder: Versicherungsnehmer
+      line_of_business: Sparte
+      start_date: Beginn
+      end_date: Ablauf
+      payment_mode: Zahlungsweise
+    # A policy prints the premium per payment period or the annual premium,
+    # so neither may block the approval; whether the one that was read is
+    # enough for the target is decided at the hand-over.
+    # Issue date and net premium are not on every policy; where they were
+    # read, the hand-over format has a field for them.
+    optional:
+      premium: Beitrag
+      annual_premium: Jahresbeitrag
+      net_premium: Nettobeitrag
+      issue_date: Ausstellungsdatum
+  contract_change:
+    values:
+      insurer: Versicherer
+      policy_number: Versicherungsscheinnummer
+      policyholder: Versicherungsnehmer
+      line_of_business: Sparte
+      change_date: Änderungsdatum
+      premium: Beitrag
+  premium_invoice:
+    values:
+      insurer: Versicherer
+      policy_number: Versicherungsscheinnummer
+      policyholder: Versicherungsnehmer
+      line_of_business: Sparte
+      due_date: Fälligkeit
+      premium: Beitrag
+    # What an invoice prints beyond the amount to pay; none of it may block
+    # the approval, each has a field in the hand-over format.
+    optional:
+      invoice_date: Rechnungsdatum
+      period_start: Zeitraum von
+      period_end: Zeitraum bis
+      net_premium: Nettobeitrag
+      insurance_tax: Versicherungsteuer
